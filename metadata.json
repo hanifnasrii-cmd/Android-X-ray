@@ -1,0 +1,6 @@
+{
+  "name": "ANDROID X-RAY",
+  "description": "Universal Android APK inspection, binary decoding, DEX/Smali reverse engineering, and project architecture workstation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
