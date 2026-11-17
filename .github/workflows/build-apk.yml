@@ -40,8 +40,15 @@ jobs:
       - name: Generate Capacitor Android project
         run: |
           npm install --no-save --legacy-peer-deps @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7
-          if [ ! -f "capacitor.config.json" ] && [ ! -f "capacitor.config.ts" ]; then
-            npx cap init "ANDROID X-RAY" "io.xray.workstation" --web-dir dist
+          rm -f capacitor.config.ts capacitor.config.mts capacitor.config.cts
+          if [ ! -f "capacitor.config.json" ]; then
+            cat << 'EOF' > capacitor.config.json
+          {
+            "appId": "io.xray.workstation",
+            "appName": "ANDROID X-RAY",
+            "webDir": "dist"
+          }
+          EOF
           fi
           if [ ! -d "android" ]; then
             npx cap add android
