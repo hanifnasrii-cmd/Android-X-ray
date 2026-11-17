@@ -17,6 +17,7 @@ import {
   Smartphone,
   Sun,
   Upload,
+  X,
 } from 'lucide-react';
 import {
   ApkEntry,
@@ -90,6 +91,7 @@ export default function App() {
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [recentPaths, setRecentPaths] = useState<string[]>([]);
   const [multiSelected, setMultiSelected] = useState<Set<string>>(new Set());
+  const [moreDrawerOpen, setMoreDrawerOpen] = useState(false);
 
   // Search state
   const [searchInitQuery, setSearchInitQuery] = useState('');
@@ -419,59 +421,72 @@ export default function App() {
     return activeTabEntry || activeProject.entries.find((e) => !e.format.isText) || activeProject.entries[0];
   }, [activeProject, selectedBinaryPath, activeTabEntry]);
 
+  const isMoreSectionActive =
+    section === 'resources' ||
+    section === 'ui-arch' ||
+    section === 'frameworks' ||
+    section === 'dependencies' ||
+    section === 'native' ||
+    section === 'binary' ||
+    section === 'databases' ||
+    section === 'graph-reports' ||
+    section === 'settings';
+
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#F6F7F2] dark:bg-[#141611] text-[#181A14] dark:text-[#E4E6DD]">
-      {/* Strict 3-Zone Top Bar */}
-      <header className="h-12 px-4 border-b border-black/10 dark:border-white/[0.08] bg-[#ECEFE6] dark:bg-[#1C1F18] flex items-center justify-between gap-8 shrink-0">
-        {/* Zone 1: Single-element Brand Wordmark */}
-        <span className="text-sm font-bold tracking-tight whitespace-nowrap shrink-0 text-[#181A14] dark:text-[#EAF5B8]">
-          ANDROID X-RAY
-        </span>
+    <div className="h-[100dvh] w-full max-w-[100vw] flex flex-col overflow-hidden bg-[#F6F7F2] dark:bg-[#141611] text-[#181A14] dark:text-[#E4E6DD]">
+      {/* Strict 3-Zone Top Bar with Android Safe-Area Inset */}
+      <header className="border-b border-black/10 dark:border-white/[0.08] bg-[#ECEFE6] dark:bg-[#1C1F18] safe-pt shrink-0">
+        <div className="h-12 px-3 sm:px-4 flex items-center justify-between gap-3 min-w-0">
+          {/* Zone 1: Single-element Brand Wordmark */}
+          <span className="text-sm font-bold tracking-tight whitespace-nowrap shrink-0 text-[#181A14] dark:text-[#EAF5B8]">
+            ANDROID X-RAY
+          </span>
 
-        {/* Zone 2: Concise Single-Line Primary Nav Links */}
-        <nav className="hidden lg:flex items-center gap-6 text-xs font-medium text-[#5A6050] dark:text-[#9CA38F]">
-          {(
-            [
-              ['explorer', 'Project Explorer'],
-              ['manifest', 'Manifest'],
-              ['code', 'DEX / Smali'],
-              ['search', 'Global Search'],
-              ['graph-reports', 'Architecture'],
-            ] as const
-          ).map(([id, label]) => (
+          {/* Zone 2: Concise Single-Line Primary Nav Links */}
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-medium text-[#5A6050] dark:text-[#9CA38F]">
+            {(
+              [
+                ['explorer', 'Project Explorer'],
+                ['manifest', 'Manifest'],
+                ['code', 'DEX / Smali'],
+                ['search', 'Global Search'],
+                ['graph-reports', 'Architecture'],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setSection(id)}
+                className={`whitespace-nowrap shrink-0 transition-colors hover:text-[#181A14] dark:hover:text-white ${
+                  section === id ? 'text-[#465D18] dark:text-[#B9D85D] underline underline-offset-4' : ''
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Zone 3: Single Primary Action */}
+          <div className="flex items-center gap-2 shrink-0">
             <button
-              key={id}
               type="button"
-              onClick={() => setSection(id)}
-              className={`whitespace-nowrap shrink-0 transition-colors hover:text-[#181A14] dark:hover:text-white ${
-                section === id ? 'text-[#465D18] dark:text-[#B9D85D] underline underline-offset-4' : ''
-              }`}
+              onClick={() => topFileInputRef.current?.click()}
+              className="px-3 py-1.5 rounded-lg bg-[#465D18] hover:bg-[#3B4E14] dark:bg-[#9BB848] dark:hover:bg-[#ACC85B] text-white dark:text-[#141611] text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap shrink-0"
             >
-              {label}
+              <Upload className="w-3.5 h-3.5" /> Import APK
             </button>
-          ))}
-        </nav>
-
-        {/* Zone 3: Single Primary Action */}
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => topFileInputRef.current?.click()}
-            className="px-3 py-1.5 rounded-lg bg-[#465D18] hover:bg-[#3B4E14] dark:bg-[#9BB848] dark:hover:bg-[#ACC85B] text-white dark:text-[#141611] text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap shrink-0"
-          >
-            <Upload className="w-3.5 h-3.5" /> Import APK
-          </button>
-          <input
-            ref={topFileInputRef}
-            type="file"
-            multiple
-            accept=".apk,.apks,.xapk,.aab,.zip,.jar,.dex,.so,.arsc,.xml,.db,.sqlite"
-            onChange={(e) => {
-              if (e.target.files?.length) handleImportFiles(e.target.files);
-              e.target.value = '';
-            }}
-            className="hidden"
-          />
+            <input
+              ref={topFileInputRef}
+              type="file"
+              multiple
+              accept=".apk,.apks,.xapk,.aab,.zip,.jar,.dex,.so,.arsc,.xml,.db,.sqlite"
+              onChange={(e) => {
+                if (e.target.files?.length) handleImportFiles(e.target.files);
+                e.target.value = '';
+              }}
+              className="hidden"
+            />
+          </div>
         </div>
       </header>
 
@@ -531,7 +546,7 @@ export default function App() {
         </aside>
 
         {/* Active Module Viewport */}
-        <main className="flex-1 min-w-0 flex flex-col overflow-hidden pb-14 md:pb-0">
+        <main className="flex-1 min-w-0 flex flex-col overflow-hidden pb-[calc(3.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
           {section === 'library' && (
             <LibraryPanel
               projects={projects}
@@ -746,13 +761,13 @@ export default function App() {
           )}
 
           {section === 'binary' && activeProject && (
-            <div className="flex flex-col h-full">
-              <div className="px-4 py-2 border-b border-black/10 dark:border-white/[0.08] bg-[#ECEFE6] dark:bg-[#1C1F18] flex items-center justify-between gap-3 text-xs">
+            <div className="flex flex-col h-full min-w-0">
+              <div className="px-3 sm:px-4 py-2 border-b border-black/10 dark:border-white/[0.08] bg-[#ECEFE6] dark:bg-[#1C1F18] flex flex-wrap items-center justify-between gap-2 text-xs">
                 <span className="font-semibold shrink-0">Binary Inspector File:</span>
                 <select
                   value={binaryTargetEntry?.path || ''}
                   onChange={(e) => setSelectedBinaryPath(e.target.value)}
-                  className="flex-1 max-w-md px-2.5 py-1 rounded bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10 font-mono"
+                  className="flex-1 min-w-0 max-w-full sm:max-w-md px-2.5 py-1.5 rounded bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10 font-mono"
                 >
                   {activeProject.entries.slice(0, 500).map((e) => (
                     <option key={e.path} value={e.path}>
@@ -772,19 +787,19 @@ export default function App() {
           )}
 
           {section === 'databases' && activeProject && (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full min-w-0">
               {dbEntries.length === 0 ? (
                 <div className="p-8 text-center text-xs text-[#7A816E]">
                   No SQLite database files (.db / .sqlite) detected in {activeProject.fileName}.
                 </div>
               ) : (
                 <>
-                  <div className="px-4 py-2 border-b border-black/10 dark:border-white/[0.08] bg-[#ECEFE6] dark:bg-[#1C1F18] flex items-center gap-3 text-xs">
+                  <div className="px-3 sm:px-4 py-2 border-b border-black/10 dark:border-white/[0.08] bg-[#ECEFE6] dark:bg-[#1C1F18] flex flex-wrap items-center gap-2 text-xs">
                     <span className="font-semibold shrink-0">SQLite Database:</span>
                     <select
                       value={selectedDbPath || dbEntries[0].path}
                       onChange={(e) => setSelectedDbPath(e.target.value)}
-                      className="px-2.5 py-1 rounded bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10 font-mono"
+                      className="flex-1 min-w-0 max-w-full sm:max-w-md px-2.5 py-1.5 rounded bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10 font-mono"
                     >
                       {dbEntries.map((d) => (
                         <option key={d.path} value={d.path}>
@@ -824,8 +839,8 @@ export default function App() {
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation (Thumb Zone, Compact <= 15% cap) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 h-14 bg-[#ECEFE6]/95 dark:bg-[#1C1F18]/95 backdrop-blur-md border-t border-black/10 dark:border-white/[0.08] flex items-center justify-around px-1">
+      {/* Mobile Bottom Navigation (Thumb Zone with Android Gesture-Bar Safe Area) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 min-h-[3.5rem] pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom,0px))] bg-[#ECEFE6]/95 dark:bg-[#1C1F18]/95 backdrop-blur-md border-t border-black/10 dark:border-white/[0.08] flex items-center justify-around px-1">
         {(
           [
             ['library', 'Apps', Smartphone],
@@ -833,15 +848,17 @@ export default function App() {
             ['search', 'Search', Search],
             ['manifest', 'Manifest', FileCode],
             ['code', 'DEX', Code2],
-            ['settings', 'More', Settings],
           ] as const
         ).map(([id, label, Icon]) => {
-          const active = section === id;
+          const active = section === id && !moreDrawerOpen;
           return (
             <button
               key={id}
               type="button"
-              onClick={() => setSection(id)}
+              onClick={() => {
+                setMoreDrawerOpen(false);
+                setSection(id);
+              }}
               className={`min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium ${
                 active ? 'text-[#465D18] dark:text-[#B9D85D]' : 'text-[#5A6050] dark:text-[#8E9580]'
               }`}
@@ -851,7 +868,83 @@ export default function App() {
             </button>
           );
         })}
+        <button
+          type="button"
+          onClick={() => setMoreDrawerOpen((o) => !o)}
+          className={`min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium ${
+            moreDrawerOpen || isMoreSectionActive
+              ? 'text-[#465D18] dark:text-[#B9D85D]'
+              : 'text-[#5A6050] dark:text-[#8E9580]'
+          }`}
+        >
+          <LayoutGrid className="w-4 h-4" />
+          <span>More</span>
+        </button>
       </nav>
+
+      {/* Mobile Modules Bottom Sheet */}
+      {moreDrawerOpen && (
+        <div className="md:hidden fixed inset-0 z-40 flex flex-col justify-end">
+          <div
+            className="flex-1 bg-black/50 backdrop-blur-[1px]"
+            onClick={() => setMoreDrawerOpen(false)}
+          />
+          <div className="bg-[#ECEFE6] dark:bg-[#1C1F18] border-t border-black/10 dark:border-white/10 rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))] shadow-2xl space-y-3 max-h-[75dvh] overflow-y-auto">
+            <div className="flex items-center justify-between gap-2 pb-1 border-b border-black/10 dark:border-white/10">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#5A6050] dark:text-[#9CA38F]">
+                Inspection Modules
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDarkMode((d) => !d)}
+                  className="min-h-[36px] px-2.5 py-1 rounded-lg border border-black/15 dark:border-white/15 text-xs font-medium flex items-center gap-1.5"
+                >
+                  {darkMode ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5" />}
+                  {darkMode ? 'Light' : 'Dark'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMoreDrawerOpen(false)}
+                  aria-label="Close modules menu"
+                  className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-black/5 dark:hover:bg-white/10"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2">
+              {NAV_ITEMS.filter((item) =>
+                ['resources', 'ui-arch', 'frameworks', 'dependencies', 'native', 'binary', 'databases', 'graph-reports', 'settings'].includes(
+                  item.id
+                )
+              ).map((item) => {
+                const Icon = item.icon;
+                const active = section === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      setSection(item.id);
+                      setMoreDrawerOpen(false);
+                    }}
+                    className={`min-h-[60px] p-2.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 text-center text-[11px] font-medium transition-colors ${
+                      active
+                        ? 'bg-[#465D18] text-white border-[#465D18] dark:bg-[#3E4A24] dark:text-[#DDF0A4] dark:border-[#9BB848]/40'
+                        : 'bg-white/60 dark:bg-[#141611] border-black/10 dark:border-white/[0.08] text-[#181A14] dark:text-[#DCE0D2]'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span className="leading-tight">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modals for Streaming Folder ZIP, Folder Info, and Compare */}
       {zipModalState && (

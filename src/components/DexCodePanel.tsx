@@ -40,9 +40,9 @@ export function DexCodePanel({ project }: { project: ApkProject }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-full">
+    <div className="flex flex-col md:flex-row h-full min-w-0 overflow-hidden">
       {/* Class & Multidex Browser */}
-      <div className="w-full md:w-80 shrink-0 border-b md:border-b-0 md:border-r border-black/10 dark:border-white/[0.08] flex flex-col bg-[#F2F4ED] dark:bg-[#191C15]">
+      <div className="w-full md:w-80 max-h-56 md:max-h-none shrink-0 border-b md:border-b-0 md:border-r border-black/10 dark:border-white/[0.08] flex flex-col bg-[#F2F4ED] dark:bg-[#191C15]">
         <div className="p-3 border-b border-black/10 dark:border-white/[0.08] space-y-2">
           <div className="flex items-center gap-1 overflow-x-auto">
             {project.dexFiles.map((d, idx) => (
@@ -126,11 +126,11 @@ export function DexCodePanel({ project }: { project: ApkProject }) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 max-w-full min-w-0">
                 <button
                   type="button"
                   onClick={() => toggleClassBookmark(activeClass.className)}
-                  className={`p-1.5 rounded border ${
+                  className={`p-1.5 rounded border shrink-0 ${
                     bookmarkedClasses.includes(activeClass.className)
                       ? 'border-[#9BB848] text-[#9BB848]'
                       : 'border-black/10 dark:border-white/10 text-[#7A816E]'
@@ -139,7 +139,7 @@ export function DexCodePanel({ project }: { project: ApkProject }) {
                 >
                   <Bookmark className="w-3.5 h-3.5" />
                 </button>
-                <div className="flex items-center gap-0.5 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg text-xs">
+                <div className="flex items-center gap-0.5 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg text-xs overflow-x-auto max-w-full">
                   {(
                     [
                       ['overview', 'Overview'],

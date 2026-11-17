@@ -180,7 +180,7 @@ export function ProjectTree({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F4ED] dark:bg-[#191C15] border-r border-black/10 dark:border-white/[0.08] select-none relative">
+    <div className="flex flex-col h-full min-w-0 overflow-hidden bg-[#F2F4ED] dark:bg-[#191C15] border-r border-black/10 dark:border-white/[0.08] select-none relative">
       {/* Top IDE Scope & Filter Controls */}
       <div className="px-3 pt-2.5 pb-2 border-b border-black/10 dark:border-white/[0.08] space-y-2 shrink-0">
         <div className="flex items-center justify-between gap-2">

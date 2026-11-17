@@ -64,28 +64,28 @@ export function ResourcesUiPanel({
     const types = ['all', ...Object.keys(rt.typeCounts).sort()];
 
     return (
-      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-5 overflow-y-auto h-full">
+      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-5 overflow-y-auto overflow-x-hidden h-full">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <h2 className="text-lg font-bold">Android Resource Inspector (resources.arsc)</h2>
-            <div className="text-xs text-[#666C5B] dark:text-[#9CA38F] font-mono tabular-nums">
+            <div className="text-xs text-[#666C5B] dark:text-[#9CA38F] font-mono tabular-nums break-words">
               {rt.entries.length.toLocaleString()} resources · Packages: {rt.packages.map((p) => p.name).join(', ')}
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative w-full sm:w-64">
             <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#7A816E]" />
             <input
               type="text"
               value={resFilter}
               onChange={(e) => setResFilter(e.target.value)}
               placeholder="Search ID (0x7f…), name, value…"
-              className="pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white dark:bg-[#191C15] border border-black/10 dark:border-white/10 w-64"
+              className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white dark:bg-[#191C15] border border-black/10 dark:border-white/10"
             />
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-lg w-fit">
+        <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-lg max-w-full overflow-x-auto">
           {types.map((t) => (
             <button
               key={t}
@@ -143,7 +143,7 @@ export function ResourcesUiPanel({
 
   // UI Architecture Explorer
   return (
-    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 overflow-y-auto h-full">
+    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 overflow-y-auto overflow-x-hidden h-full">
       <div>
         <h2 className="text-lg font-bold flex items-center gap-2">
           <Layers className="w-5 h-5 text-[#9BB848]" /> UI Architecture &amp; Resource Mapping

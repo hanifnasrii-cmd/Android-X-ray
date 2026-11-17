@@ -112,7 +112,7 @@ export function GraphReportsSettingsPanel({
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
 
     return (
-      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 overflow-y-auto h-full">
+      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 overflow-y-auto overflow-x-hidden h-full">
         {/* Interactive Component Architecture Graph */}
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -262,7 +262,7 @@ export function GraphReportsSettingsPanel({
 
   // Settings & Feature Implementation / Compatibility Matrix
   return (
-    <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6 overflow-y-auto h-full">
+    <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6 overflow-y-auto overflow-x-hidden h-full">
       <div>
         <h2 className="text-lg font-bold">Workstation Settings &amp; Implementation Matrix</h2>
         <p className="text-xs text-[#5A6050] dark:text-[#9CA38F] mt-1">
@@ -271,15 +271,15 @@ export function GraphReportsSettingsPanel({
       </div>
 
       <div className="border border-black/10 dark:border-white/[0.08] rounded-xl divide-y divide-black/5 dark:divide-white/[0.06] bg-white dark:bg-[#181B14] text-xs">
-        <div className="px-4 py-3 flex items-center justify-between gap-4">
-          <div>
+        <div className="px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
             <div className="font-semibold">Color Theme</div>
             <div className="text-[#7A816E]">Switch between Material 3 Dark Olive and Light Stone themes.</div>
           </div>
           <button
             type="button"
             onClick={onToggleDarkMode}
-            className="px-3 py-1.5 rounded-lg border border-black/15 dark:border-white/15 flex items-center gap-1.5 font-medium"
+            className="px-3 py-1.5 rounded-lg border border-black/15 dark:border-white/15 flex items-center gap-1.5 font-medium whitespace-nowrap shrink-0"
           >
             {darkMode ? <Moon className="w-3.5 h-3.5 text-[#9BB848]" /> : <Sun className="w-3.5 h-3.5 text-amber-500" />}
             {darkMode ? 'Dark Mode' : 'Light Mode'}

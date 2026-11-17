@@ -87,9 +87,9 @@ export function SqliteViewer({ entry }: { entry: ApkEntry }) {
   const activeSummary = tables.find((t) => t.name === selectedTable);
 
   return (
-    <div className="flex flex-col md:flex-row h-full">
+    <div className="flex flex-col md:flex-row h-full min-w-0 overflow-hidden">
       {/* Schema Sidebar */}
-      <div className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-black/10 dark:border-white/[0.08] overflow-y-auto p-3 space-y-2 bg-[#ECEFE6] dark:bg-[#191C15]">
+      <div className="w-full md:w-64 max-h-48 md:max-h-none shrink-0 border-b md:border-b-0 md:border-r border-black/10 dark:border-white/[0.08] overflow-y-auto p-3 space-y-2 bg-[#ECEFE6] dark:bg-[#191C15]">
         <div className="text-xs font-semibold text-[#5A6050] dark:text-[#9CA38F]">
           Schema Objects ({tables.length})
         </div>
@@ -141,7 +141,7 @@ export function SqliteViewer({ entry }: { entry: ApkEntry }) {
             onChange={(e) => setSqlInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleRunQuery()}
             placeholder="SELECT * FROM table LIMIT 100;"
-            className="flex-1 min-w-[200px] px-3 py-1.5 text-xs font-mono rounded-md bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10"
+            className="flex-1 min-w-0 sm:min-w-[200px] px-3 py-1.5 text-xs font-mono rounded-md bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10"
           />
           <button
             type="button"

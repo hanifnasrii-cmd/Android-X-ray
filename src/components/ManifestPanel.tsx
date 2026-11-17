@@ -26,11 +26,11 @@ export function ManifestPanel({ project, onOpenManifestLine }: ManifestPanelProp
   });
 
   return (
-    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 overflow-y-auto h-full">
+    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 overflow-y-auto overflow-x-hidden h-full">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <h2 className="text-lg font-bold">AndroidManifest.xml Inspector</h2>
-          <div className="text-xs text-[#666C5B] dark:text-[#9CA38F] font-mono">
+          <div className="text-xs text-[#666C5B] dark:text-[#9CA38F] font-mono break-all">
             {manifest.packageName} · {manifest.isBinaryXml ? 'Decoded Binary AXML' : 'Plain XML'}
           </div>
         </div>
@@ -81,9 +81,9 @@ export function ManifestPanel({ project, onOpenManifestLine }: ManifestPanelProp
         ) : (
           <div className="border border-black/10 dark:border-white/[0.08] rounded-xl divide-y divide-black/5 dark:divide-white/[0.06] bg-white dark:bg-[#181B14]">
             {manifest.securityFindings.map((f) => (
-              <div key={f.id} className="px-4 py-3 flex items-start justify-between gap-4 text-xs">
-                <div className="space-y-0.5">
-                  <div className="font-semibold flex items-center gap-2">
+              <div key={f.id} className="px-4 py-3 flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-4 text-xs">
+                <div className="space-y-0.5 min-w-0">
+                  <div className="font-semibold flex flex-wrap items-center gap-2">
                     <span
                       className={`font-mono uppercase text-[11px] ${
                         f.severity === 'high'
@@ -97,9 +97,9 @@ export function ManifestPanel({ project, onOpenManifestLine }: ManifestPanelProp
                     </span>
                     <span>{f.title}</span>
                   </div>
-                  <div className="text-[#5A6050] dark:text-[#9CA38F]">{f.description}</div>
+                  <div className="text-[#5A6050] dark:text-[#9CA38F] break-words">{f.description}</div>
                 </div>
-                {f.component && <span className="font-mono text-[11px] text-[#7A816E] shrink-0">{f.component}</span>}
+                {f.component && <span className="font-mono text-[11px] text-[#7A816E] break-all sm:shrink-0">{f.component}</span>}
               </div>
             ))}
           </div>
@@ -110,7 +110,7 @@ export function ManifestPanel({ project, onOpenManifestLine }: ManifestPanelProp
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="text-sm font-semibold">Application Components ({manifest.components.length})</h3>
-          <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg text-xs">
+          <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg text-xs overflow-x-auto max-w-full">
             {(['all', 'activity', 'service', 'receiver', 'provider'] as const).map((t) => (
               <button
                 key={t}

@@ -16,7 +16,7 @@ export function FrameworksNativePanel({
 
   if (mode === 'frameworks') {
     return (
-      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-5 overflow-y-auto h-full">
+      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-5 overflow-y-auto overflow-x-hidden h-full">
         <div>
           <h2 className="text-lg font-bold flex items-center gap-2">
             <Layers className="w-5 h-5 text-[#9BB848]" /> Framework &amp; Technology Detection
@@ -65,7 +65,7 @@ export function FrameworksNativePanel({
     ).sort();
 
     return (
-      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 overflow-y-auto h-full text-xs">
+      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 overflow-y-auto overflow-x-hidden h-full text-xs">
         <div>
           <h2 className="text-lg font-bold flex items-center gap-2">
             <Package className="w-5 h-5 text-[#9BB848]" /> Dependencies &amp; Bundled Libraries
@@ -148,8 +148,8 @@ export function FrameworksNativePanel({
   const elf = project.elfFiles[selectedElfIdx] || project.elfFiles[0];
 
   return (
-    <div className="flex flex-col md:flex-row h-full">
-      <div className="w-full md:w-72 shrink-0 border-b md:border-b-0 md:border-r border-black/10 dark:border-white/[0.08] bg-[#F2F4ED] dark:bg-[#191C15] overflow-y-auto p-3 space-y-1.5">
+    <div className="flex flex-col md:flex-row h-full min-w-0 overflow-hidden">
+      <div className="w-full md:w-72 max-h-44 md:max-h-none shrink-0 border-b md:border-b-0 md:border-r border-black/10 dark:border-white/[0.08] bg-[#F2F4ED] dark:bg-[#191C15] overflow-y-auto p-3 space-y-1.5">
         <div className="text-xs font-semibold text-[#5A6050] dark:text-[#9CA38F] mb-2">
           ELF Binaries ({project.elfFiles.length})
         </div>
@@ -174,11 +174,11 @@ export function FrameworksNativePanel({
 
       <div className="flex-1 flex flex-col min-w-0 bg-[#F8F9F5] dark:bg-[#141611]">
         <div className="px-4 py-2.5 border-b border-black/10 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-2 bg-[#ECEFE6] dark:bg-[#1B1E17]">
-          <div className="flex items-center gap-2 text-xs font-mono font-semibold truncate">
+          <div className="flex items-center gap-2 text-xs font-mono font-semibold truncate max-w-full">
             <Cpu className="w-4 h-4 text-[#9BB848] shrink-0" />
             <span className="truncate">{elf.filePath}</span>
           </div>
-          <div className="flex items-center gap-0.5 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg text-xs">
+          <div className="flex items-center gap-0.5 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg text-xs overflow-x-auto max-w-full">
             {(
               [
                 ['overview', 'Overview'],
@@ -245,28 +245,30 @@ export function FrameworksNativePanel({
           )}
 
           {elfTab === 'sections' && (
-            <table className="w-full text-left border-collapse font-mono">
-              <thead className="border-b border-black/10 dark:border-white/10 text-[#7A816E]">
-                <tr>
-                  <th className="py-2 pr-3">Name</th>
-                  <th className="py-2 pr-3">Type</th>
-                  <th className="py-2 pr-3">Flags</th>
-                  <th className="py-2 pr-3">Addr</th>
-                  <th className="py-2 text-right">Size</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-black/5 dark:divide-white/[0.05]">
-                {elf.sections.map((s, i) => (
-                  <tr key={i}>
-                    <td className="py-1.5 pr-3">{s.name}</td>
-                    <td className="py-1.5 pr-3 text-[#7A816E]">{s.type}</td>
-                    <td className="py-1.5 pr-3">{s.flags}</td>
-                    <td className="py-1.5 pr-3">{s.addr}</td>
-                    <td className="py-1.5 text-right tabular-nums">{s.size}</td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse font-mono min-w-[460px]">
+                <thead className="border-b border-black/10 dark:border-white/10 text-[#7A816E]">
+                  <tr>
+                    <th className="py-2 pr-3">Name</th>
+                    <th className="py-2 pr-3">Type</th>
+                    <th className="py-2 pr-3">Flags</th>
+                    <th className="py-2 pr-3">Addr</th>
+                    <th className="py-2 text-right">Size</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-black/5 dark:divide-white/[0.05]">
+                  {elf.sections.map((s, i) => (
+                    <tr key={i}>
+                      <td className="py-1.5 pr-3">{s.name}</td>
+                      <td className="py-1.5 pr-3 text-[#7A816E]">{s.type}</td>
+                      <td className="py-1.5 pr-3">{s.flags}</td>
+                      <td className="py-1.5 pr-3">{s.addr}</td>
+                      <td className="py-1.5 text-right tabular-nums">{s.size}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
 
           {(elfTab === 'exports' || elfTab === 'imports') && (

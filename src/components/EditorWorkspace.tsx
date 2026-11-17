@@ -250,9 +250,9 @@ export function EditorWorkspace({
           <span className="text-[11px] font-mono text-[#7A816E] shrink-0">· Read-Only</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 max-w-full min-w-0">
           {/* View Mode Segmented Buttons */}
-          <div className="flex items-center gap-0.5 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg">
+          <div className="flex items-center gap-0.5 bg-black/5 dark:bg-white/5 p-0.5 rounded-lg max-w-full overflow-x-auto">
             {availableModes.map((m) => (
               <button
                 key={m.id}
@@ -327,7 +327,7 @@ export function EditorWorkspace({
               setFindMatchIdx(0);
             }}
             placeholder="Find in file…"
-            className="px-2.5 py-1 rounded bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10 w-52"
+            className="px-2.5 py-1 rounded bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10 w-full sm:w-52"
           />
           <span className="font-mono tabular-nums text-[#7A816E]">
             {findMatches.length > 0 ? `${findMatchIdx + 1}/${findMatches.length}` : '0 matches'}

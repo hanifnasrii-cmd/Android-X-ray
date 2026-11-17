@@ -114,8 +114,8 @@ export function HexInspector({ entry, initialOffset = 0 }: HexInspectorProps) {
           <span className="tabular-nums">{bytes.length.toLocaleString()} bytes</span>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-0.5 rounded-md text-xs">
+        <div className="flex items-center gap-1.5 max-w-full">
+          <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-0.5 rounded-md text-xs overflow-x-auto max-w-full">
             {(['hex', 'strings', 'utf16'] as const).map((t) => (
               <button
                 key={t}
@@ -134,9 +134,9 @@ export function HexInspector({ entry, initialOffset = 0 }: HexInspectorProps) {
 
       {tab === 'hex' && (
         <>
-          <div className="px-4 py-2 border-b border-black/5 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-xs">
-            <div className="flex items-center gap-1.5">
-              <div className="relative">
+          <div className="px-3 sm:px-4 py-2 border-b border-black/5 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-1.5 w-full sm:w-auto">
+              <div className="relative flex-1 sm:flex-initial">
                 <Search className="w-3.5 h-3.5 absolute left-2 top-1/2 -translate-y-1/2 text-[#7A816E]" />
                 <input
                   type="text"
@@ -144,7 +144,7 @@ export function HexInspector({ entry, initialOffset = 0 }: HexInspectorProps) {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleFindNext()}
                   placeholder={searchMode === 'hex' ? 'Find hex (e.g. 50 4B 03)…' : 'Find ASCII bytes…'}
-                  className="pl-7 pr-2 py-1 rounded bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10 text-xs font-mono w-52"
+                  className="pl-7 pr-2 py-1 rounded bg-white dark:bg-[#141611] border border-black/10 dark:border-white/10 text-xs font-mono w-full sm:w-52"
                 />
               </div>
               <button

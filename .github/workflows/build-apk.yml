@@ -22,38 +22,72 @@ jobs:
           node-version: '22'
 
       - name: Set up Java 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools
 
       - name: Install dependencies & build web bundle
         run: |
-          npm install --legacy-peer-deps
+          npm install
           npm run build
 
       - name: Generate Capacitor Android project
         run: |
-          npm install --no-save --legacy-peer-deps @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7
-          rm -f capacitor.config.ts capacitor.config.mts capacitor.config.cts
-          if [ ! -f "capacitor.config.json" ]; then
-            cat << 'EOF' > capacitor.config.json
-          {
-            "appId": "io.xray.workstation",
-            "appName": "ANDROID X-RAY",
-            "webDir": "dist"
-          }
-          EOF
+          npm install --no-save @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7
+          if [ ! -f "capacitor.config.json" ] && [ ! -f "capacitor.config.ts" ]; then
+            npx cap init "ANDROID X-RAY" "io.xray.workstation" --web-dir dist
           fi
           if [ ! -d "android" ]; then
             npx cap add android
           fi
           npx cap sync android
+
+      - name: Configure Android 11-16 Safe-Area Insets & Status Bar
+        run: |
+          cat << 'EOF' > android/app/src/main/java/io/xray/workstation/MainActivity.java
+          package io.xray.workstation;
+
+          import android.graphics.Color;
+          import android.os.Bundle;
+          import android.view.View;
+          import androidx.core.graphics.Insets;
+          import androidx.core.view.ViewCompat;
+          import androidx.core.view.WindowCompat;
+          import androidx.core.view.WindowInsetsCompat;
+          import androidx.core.view.WindowInsetsControllerCompat;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  getWindow().setStatusBarColor(Color.parseColor("#1C1F18"));
+                  getWindow().setNavigationBarColor(Color.parseColor("#1C1F18"));
+                  WindowInsetsControllerCompat controller =
+                      WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+                  if (controller != null) {
+                      controller.setAppearanceLightStatusBars(false);
+                      controller.setAppearanceLightNavigationBars(false);
+                  }
+                  View content = findViewById(android.R.id.content);
+                  if (content != null) {
+                      content.setBackgroundColor(Color.parseColor("#1C1F18"));
+                      ViewCompat.setOnApplyWindowInsetsListener(content, (v, windowInsets) -> {
+                          Insets bars = windowInsets.getInsets(
+                              WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()
+                          );
+                          v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+                          return WindowInsetsCompat.CONSUMED;
+                      });
+                      ViewCompat.requestApplyInsets(content);
+                  }
+              }
+          }
+          EOF
 
       - name: Build Debug APK with Gradle
         working-directory: android

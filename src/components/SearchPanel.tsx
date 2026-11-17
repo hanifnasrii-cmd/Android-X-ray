@@ -87,10 +87,10 @@ export function SearchPanel({
   }, [results]);
 
   return (
-    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-4 overflow-y-auto h-full">
+    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-4 overflow-y-auto overflow-x-hidden h-full">
       <div className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div>
+          <div className="min-w-0">
             <h2 className="text-lg font-bold">Indexed Global Search</h2>
             <div className="text-xs text-[#666C5B] dark:text-[#9CA38F] tabular-nums">
               {scopedIndex.length.toLocaleString()} indexed records ready
@@ -102,16 +102,16 @@ export function SearchPanel({
             <button
               type="button"
               onClick={onClearFolderScope}
-              className="px-2.5 py-1 rounded-md border border-[#9BB848]/40 text-xs font-mono text-[#9BB848] flex items-center gap-1"
+              className="px-2.5 py-1 rounded-md border border-[#9BB848]/40 text-xs font-mono text-[#9BB848] flex items-center gap-1 max-w-full truncate"
             >
-              Scope: {folderScope}/ <X className="w-3 h-3" />
+              Scope: {folderScope}/ <X className="w-3 h-3 shrink-0" />
             </button>
           )}
         </div>
 
         {/* Search Input + Expandable Filter Drawer Toggle */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative flex-1 min-w-[220px]">
+          <div className="relative flex-1 min-w-0 sm:min-w-[220px]">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#7A816E]" />
             <input
               type="text"
@@ -255,11 +255,11 @@ export function SearchPanel({
                         }}
                         className="w-full px-4 py-2 text-left hover:bg-black/[0.03] dark:hover:bg-white/[0.03] flex items-start gap-3 text-xs font-mono"
                       >
-                        <span className="text-[#9BB848] shrink-0 w-16 tabular-nums">
+                        <span className="text-[#9BB848] shrink-0 w-12 sm:w-16 tabular-nums">
                           {r.item.offset ? `0x${r.item.offset.toString(16)}` : `L${r.item.line}`}
                         </span>
-                        <span className="text-[#7A816E] shrink-0 w-20">{r.item.category}</span>
-                        <span className="truncate">
+                        <span className="text-[#7A816E] shrink-0 w-16 sm:w-20 truncate">{r.item.category}</span>
+                        <span className="min-w-0 flex-1 truncate">
                           {before}
                           <mark className="bg-[#9BB848]/30 text-inherit px-0.5 rounded-xs">{hit}</mark>
                           {after}
